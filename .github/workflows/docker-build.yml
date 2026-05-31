@@ -1,0 +1,19 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Docker image
+        run: docker build -t backup-tool .
+      - name: Test Docker image
+        run: |
+          mkdir test_data
+          touch test_data/file1.txt
+          docker run --rm -v $PWD/test_data:/data backup-tool /data
+          ls -la test_data/
